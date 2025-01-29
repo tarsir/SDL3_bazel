@@ -1,0 +1,17 @@
+###############################################################################
+# Bazel now uses Bzlmod by default to manage external dependencies.
+# Please consider migrating your external dependencies from WORKSPACE to MODULE.bazel.
+#
+# For more details, please check https://github.com/bazelbuild/bazel/issues/18958
+###############################################################################
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+  name= "com_github_sdl",
+  build_file = "@//third_party:BUILD",
+  url = "https://github.com/libsdl-org/SDL/releases/download/release-3.2.0/SDL3-3.2.0.tar.gz",
+  strip_prefix = "SDL3-3.2.0",
+)
+bazel_dep(
+    name = "rules_foreign_cc",
+    version = "0.13.0"
+)
