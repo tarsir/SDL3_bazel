@@ -8,7 +8,7 @@ filegroup(
     visibility = ["//visibility:public"],
 )
 
-cmake (
+cmake(
     name = "sdl3",
     lib_source = ":srcs",
     defines = select({
@@ -19,10 +19,14 @@ cmake (
         ]
     }),
     out_include_dir = "include",
+    out_interface_libs = select({
+        "@bazel_tools//src/conditions:windows": ["SDL3.lib"],
+        "//conditions:default": []
+    }),
     out_shared_libs = select({
         "@bazel_tools//src/conditions:darwin": ["libSDL3.0.dylib"],
         "@bazel_tools//src/conditions:linux": ["libSDL3.so.0"],
-        "@bazel_tools//src/conditions:windows": ["libSDL3.dll"]
+        "@bazel_tools//src/conditions:windows": ["SDL3.dll"]
     }),
     visibility = ["//visibility:public"],
 )
