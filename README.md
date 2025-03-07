@@ -9,7 +9,15 @@ If you just want to clone this repo and get started, the Bazel
 invocation you seek is:
 
 ```sh
-bazel run //:sdl3-test
+bazel run //:sdl3-shared
+```
+
+### Building for WASM
+
+I will write more on this later!
+
+```sh
+bazel build //:sdl3-wasm --features="-output_format_js" --linkopt="-o=sdl3-wasm.html" --linkopt="--oformat=html"
 ```
 
 ### Suggestions

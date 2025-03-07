@@ -15,3 +15,14 @@ bazel_dep(
     name = "rules_foreign_cc",
     version = "0.13.0"
 )
+bazel_dep(name = "platforms", version = "0.0.11")
+
+# git_repository = use_repo_rule("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+bazel_dep(name = "emsdk", version = "4.0.2")
+
+git_override(
+  module_name="emsdk",
+  remote="https://github.com/cburchert/emsdk.git",
+  branch="bzlmod",
+  strip_prefix="bazel",
+)
