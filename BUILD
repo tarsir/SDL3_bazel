@@ -1,7 +1,7 @@
 load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
 
 cc_binary(
-  name = "sdl3-shared",
+  name = "sdl3-example",
   srcs = [
     "main.cpp"
   ],
@@ -11,7 +11,7 @@ cc_binary(
 )
 
 cc_binary(
-    name = "sdl3-slib",
+    name = "sdl3-example-static-linked",
     srcs = [
         "main.cpp"
     ],
@@ -22,7 +22,7 @@ cc_binary(
 
 wasm_cc_binary(
   name = "sdl3-wasm",
-  cc_target = ":sdl3-slib",
+  cc_target = ":sdl3-example-static-linked",
   outputs = [
     "sdl3-wasm.html",
     "sdl3-wasm.wasm",
