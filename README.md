@@ -9,7 +9,41 @@ If you just want to clone this repo and get started, the Bazel
 invocation you seek is:
 
 ```sh
-bazel run //:sdl3-test
+bazel run //:sdl3-example
+```
+
+### Building for WASM
+
+Building to WASM requires Emscripten, which basically replaces the C/C++ compiler
+in a build-to-WASM toolchain. Integrating Emscripten with Bazel modules isn't fully
+supported, but there is a [handy in-progress branch](https://github.com/emscripten-core/emsdk/pull/1530)
+that we can use by pointing the `git_repository` rule at the branch.
+
+After several late nights of experimenting, I finally arrived at a better understanding of
+Bazel and that branch, and here is the summary! The target and flags you'll use depend
+on the artifact you want.
+
+```sh
+# to do the equivalent of `emcc main.cpp -o sdl3-wasm.html`
+bazel build //:sdl3-wasm --features="-output_format_js" --linkopt="-o=sdl3-wasm.html" --linkopt="--oformat=html"
+# if you just need the JS, you can instead do the simpler:
+bazel build //:sdl3-wasm-js-only
+```
+
+In both cases, for some reason, the generated HTML/JS will have incorrect references to the
+JS/WASM. It uses the `cc_target` name instead of the specified output names, so you
+will need to correct them:
+
+```html
+<!-- bazel-bin/sdl3-wasm.html -->
+<script async type="text/javascript" src="sdl3-example-static-linked.js"></script>
+```
+
+```js
+// bazel-bin/sdl3-wasm.js
+function findWasmBinary() {
+  return locateFile("sdl3-example-static-linked.wasm");
+}
 ```
 
 ### Suggestions
