@@ -19,17 +19,13 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     std::cout << "SDL init returned: " << ret << std::endl;
     if (!ret) {
       SDL_Log("SDL Init failed with: %s", SDL_GetError());
-      // SDL_Log("Current video driver: %s", SDL_GetCurrentVideoDriver());
-      // int i = SDL_GetNumVideoDrivers();
-      // for (int j = 0; j < i; j++) {
-      //   SDL_Log("Driver %d: %s", j, SDL_GetVideoDriver(j));
-      // }
     }
 
     if (!SDL_CreateWindowAndRenderer("SDL3 Bazel Test", 640, 480, 0, &window, &renderer)) {
       SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
       return SDL_APP_FAILURE;
     }
+
     return SDL_APP_CONTINUE;
 }
 
