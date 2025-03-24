@@ -9,7 +9,7 @@ struct GameState {
   uint8_t red;
 };
 
-extern "C" void game_update(SDL_Renderer *renderer, GameState **state);
+extern "C" void game_update(SDL_Renderer *renderer, GameState *state);
 extern "C" void game_init(GameState **state);
 
 #endif

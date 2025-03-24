@@ -1,19 +1,19 @@
 #include "game.h"
 
-void game_update(SDL_Renderer *renderer, GameState **state) {
-  SDL_Log("Get mouse state - start");
+void game_update(SDL_Renderer *renderer, GameState *state) {
+  // SDL_Log("Get mouse state - start");
   SDL_FRect rect;
   float x, y;
   auto mouseState = SDL_GetMouseState(&x, &y);
-  SDL_Log("Get mouse state - finish");
+  // SDL_Log("Get mouse state - finish");
   rect.x = x;
   rect.y = y;
   rect.w = 100;
   rect.h = 200;
-  (*state)->red += 1;
+  state->red += 1;
 
-  SDL_SetRenderDrawColor(renderer, (*state)->red, 0, 0, 0);
-  SDL_RenderClear(renderer);
+  SDL_SetRenderDrawColor(renderer, state->red, 0, 0, 0);
+  SDL_RenderRect(renderer, &rect);
 }
 
 void game_init(GameState **state) {
