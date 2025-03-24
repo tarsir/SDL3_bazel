@@ -1,10 +1,29 @@
 load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
 
+cc_library(
+  name = "game",
+  srcs = glob(["src/game.*"]),
+  hdrs = [
+    "src/game.h"
+  ],
+  deps = [
+    "@com_github_sdl//:sdl3_shared",
+  ]
+)
+
+cc_binary(
+  name = "engine",
+  data = [":game"],
+  srcs = glob(["src/engine.*", "src/main.cpp"]),
+  deps = [
+    "@com_github_sdl//:sdl3_shared",
+    ":game",
+  ]
+)
+
 cc_binary(
   name = "sdl3-example",
-  srcs = [
-    "main.cpp"
-  ],
+  srcs = glob(["src/**"]),
   deps = [
     "@com_github_sdl//:sdl3_shared"
   ]
@@ -12,9 +31,7 @@ cc_binary(
 
 cc_binary(
     name = "sdl3-example-static-linked",
-    srcs = [
-        "main.cpp"
-    ],
+    srcs = glob(["src/**"]),
     deps = [
         "@com_github_sdl//:sdl3_static",
     ]
