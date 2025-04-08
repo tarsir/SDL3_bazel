@@ -2,9 +2,8 @@
 #define ENGINE_H
 
 #include "game.h"
-#include <SDL3/SDL3.h>
+#include <SDL3/SDL.h>
 #include <SDL3/SDL_init.h>
-#include <SDL3/SDL_main.h>
 
 typedef void (*GameUpdate)(SDL_Renderer *renderer, GameState **gameState);
 

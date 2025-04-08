@@ -1,11 +1,11 @@
 #include "game.h"
 
 void game_update(SDL_Renderer *renderer, GameState *state) {
-  // SDL_Log("Get mouse state - start");
   SDL_FRect rect;
   float x, y;
+  SDL_Log("Game update - get mouse state start");
   auto mouseState = SDL_GetMouseState(&x, &y);
-  // SDL_Log("Get mouse state - finish");
+  SDL_Log("Game update - get mouse state finish");
   rect.x = x;
   rect.y = y;
   rect.w = 100;

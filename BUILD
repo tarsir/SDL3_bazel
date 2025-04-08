@@ -22,16 +22,16 @@ cc_binary(
 )
 
 cc_binary(
-  name = "sdl3-example",
-  srcs = glob(["src/**"]),
+  name = "release",
+  srcs = glob(["src/**"], exclude=["src/main.cpp"]),
   deps = [
     "@com_github_sdl//:sdl3_shared"
   ]
 )
 
 cc_binary(
-    name = "sdl3-example-static-linked",
-    srcs = glob(["src/**"]),
+    name = "release-static-linked",
+    srcs = glob(["src/**"], exclude=["src/main.cpp"]),
     deps = [
         "@com_github_sdl//:sdl3_static",
     ]
@@ -39,7 +39,7 @@ cc_binary(
 
 wasm_cc_binary(
   name = "sdl3-wasm",
-  cc_target = ":sdl3-example-static-linked",
+  cc_target = ":release-static-linked",
   # emcc main.cpp -o sdl3-wasm.html
   outputs = [
     "sdl3-wasm.html",
@@ -50,7 +50,7 @@ wasm_cc_binary(
 
 wasm_cc_binary(
   name = "sdl3-wasm-js-only",
-  cc_target = ":sdl3-example-static-linked",
+  cc_target = ":release-static-linked",
   outputs = [
     "sdl3-wasm-js-only.wasm",
     "sdl3-wasm-js-only.js"
