@@ -5,12 +5,37 @@ building with Bazel 8 by using modules.
 
 ## How to Run
 
-If you just want to clone this repo and get started, the Bazel
-invocation you seek is:
+This repo uses Bazel as the build system, which gives us a form of package management (although
+it's not always so simple) to pull in dependencies like SDL and emscripten.
+
+A quick list of the useful Bazel targets is as follows:
 
 ```sh
-bazel run //:sdl3-example
+bazel run //:engine # this is "development mode" with hot reload enabled
+bazel run //:release # "release mode" with no hot reload and the game code linked statically
+bazel build //:sdl3-wasm-js-only # build to WASM and JS, more info below
+bazel build //:sdl3-wasm --features="-output_format_js" --linkopt="-o=sdl3-wasm.html" --linkopt="--oformat=html" # see below
 ```
+
+### Suggestions
+
+I recommend using [Bazelisk](https://github.com/bazelbuild/bazelisk)
+to manage Bazel versions and make use of the `.bazelversion` file
+in the repo.
+
+### Building for development
+
+The current version of the repo has a rough "development" mode, allowing for hot reload. This
+can be started with:
+
+```sh
+bazel run //:engine
+```
+
+The current project may need some heavy modifications to work with more complex aspects of the
+hot reload functionality, such as state migration between "world" versions.
+
+The hot reload currently does not support WASM builds. For WASM, you can use...
 
 ### Building for WASM
 
@@ -36,7 +61,11 @@ will need to correct them:
 
 ```html
 <!-- bazel-bin/sdl3-wasm.html -->
-<script async type="text/javascript" src="sdl3-example-static-linked.js"></script>
+<script
+  async
+  type="text/javascript"
+  src="sdl3-example-static-linked.js"
+></script>
 ```
 
 ```js
@@ -46,11 +75,17 @@ function findWasmBinary() {
 }
 ```
 
-### Suggestions
+## Credits/Attributions
 
-I recommend using [Bazelisk](https://github.com/bazelbuild/bazelisk)
-to manage Bazel versions and make use of the `.bazelversion` file
-in the repo.
+I would just like to thank some folks for a lot of the functionality in this
+project:
+
+- [A Gist from @k-bharadwaj](https://gist.github.com/k-bharadwaj/7f0922425a6ac6dd4b938894563b27a4)
+  was the first thing I adapted
+- [@kkpattern](https://github.com/kkpattern) who kindly submitted the first pull request, which
+  added Windows support for one of the earlier project versions!
+- [@iozsaygi](https://github.com/iozsaygi/sdl-hot-reload) who hasn't directly contributed, but I
+  used a fair bit of the structure of their SDL hot reload code
 
 ## How it works
 
