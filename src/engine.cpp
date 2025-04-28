@@ -27,7 +27,8 @@ SDL_AppResult engine_init(const int width, const int height, const char *title,
 
   if (!SDL_CreateWindowAndRenderer(title, width, height, 0, &r_context->window,
                                    &r_context->renderer)) {
-    SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                 "Couldn't create window/renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
 
@@ -125,6 +126,13 @@ SDL_AppResult engine_update(struct AppState *appState) {
   return SDL_APP_CONTINUE;
 }
 
+/**
+ * Log a bunch of pointers related to app state, the render context, and the
+ * game info pointer.
+ *
+ * This can't be used in release builds as-is since we don't do anything with
+ * the game info pointer.
+ */
 void debug_pointers(const struct AppState *appState, const char *label) {
   SDL_Log("-- %s START", label);
   SDL_Log("appState pointer: %d", appState);
