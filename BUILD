@@ -2,7 +2,7 @@ load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
 
 cc_library(
   name = "game",
-  srcs = glob(["src/game.*"]),
+  srcs = glob(["src/**"], exclude=["src/release_main.cpp"]),
   hdrs = [
     "src/game.h"
   ],

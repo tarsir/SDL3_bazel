@@ -1,4 +1,5 @@
 #include "game.h"
+#include "ui/ui.h"
 
 void game_update(SDL_Renderer *renderer, GameState *state) {
   SDL_FRect rect;
@@ -10,7 +11,7 @@ void game_update(SDL_Renderer *renderer, GameState *state) {
   rect.h = 200;
 
   SDL_SetRenderDrawColor(renderer, 0, state->red, 0, 0);
-  SDL_RenderFillRect(renderer, &rect);
+  draw_button(renderer, vec2_f{x, y}, vec2{100, 200});
 }
 
 void game_init(GameState **state) {
