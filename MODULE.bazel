@@ -5,25 +5,26 @@
 # For more details, please check https://github.com/bazelbuild/bazel/issues/18958
 ###############################################################################
 http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
 http_archive(
-  name= "com_github_sdl",
-  build_file = "@//third_party:BUILD",
-  url = "https://github.com/libsdl-org/SDL/releases/download/release-3.2.0/SDL3-3.2.0.tar.gz",
-  strip_prefix = "SDL3-3.2.0",
+    name = "com_github_sdl",
+    build_file = "@//third_party:BUILD",
+    strip_prefix = "SDL3-3.2.0",
+    url = "https://github.com/libsdl-org/SDL/releases/download/release-3.2.0/SDL3-3.2.0.tar.gz",
 )
+
 bazel_dep(
     name = "rules_foreign_cc",
-    version = "0.13.0"
+    version = "0.15.0",
 )
 bazel_dep(name = "platforms", version = "0.0.11")
 
 emsdk_version = "4.0.7"
+
 bazel_dep(name = "emsdk", version = emsdk_version)
-
-
 git_override(
-  module_name="emsdk",
-  remote="https://github.com/emscripten-core/emsdk.git",
-  strip_prefix="bazel",
-  tag = emsdk_version
+    module_name = "emsdk",
+    remote = "https://github.com/emscripten-core/emsdk.git",
+    strip_prefix = "bazel",
+    tag = emsdk_version,
 )
