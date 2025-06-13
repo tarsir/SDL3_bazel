@@ -7,6 +7,10 @@
 #include <cstdio>
 #include <cstdlib>
 
+#ifndef GAME_LIB_PATH
+#define GAME_LIB_PATH "libgame.so"
+#endif
+
 SDL_AppResult engine_init(const int width, const int height, const char *title,
                           struct AppState *state) {
   auto setMetadata =
@@ -36,7 +40,7 @@ SDL_AppResult engine_init(const int width, const int height, const char *title,
 
   state->game->isValid = false;
 
-  state->game->game_object = SDL_LoadObject("./libgame.so");
+  state->game->game_object = SDL_LoadObject(GAME_LIB_PATH);
   if (state->game->game_object == nullptr) {
     SDL_Log("Failed to load game code: %s", SDL_GetError());
     return SDL_APP_FAILURE;
