@@ -3,12 +3,16 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
+#ifndef GAME_LIB_PATH
+#define GAME_LIB_PATH ""
+#endif
+
 static SDL_Window *window = NULL;
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
   struct RenderContext *r_context = new RenderContext{nullptr, nullptr};
 
-  struct Game *game = new Game{false, "game.so", nullptr, nullptr, nullptr};
+  struct Game *game = new Game{false, GAME_LIB_PATH, nullptr, nullptr, nullptr};
 
   *appstate = new AppState;
   AppState &state = *static_cast<AppState *>(*appstate);

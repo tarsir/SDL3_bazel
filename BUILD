@@ -26,7 +26,12 @@ cc_binary(
   deps = [
     "@com_github_sdl//:sdl3_shared",
     ":game_headers",
-  ]
+  ],
+  defines = select({
+    "@bazel_tools//src/conditions:darwin": ['GAME_LIB_PATH=\\"./libgame.dylib\\"'],
+    "@bazel_tools//src/conditions:linux": ['GAME_LIB_PATH=\\"./libgame.so\\"'],
+    "@bazel_tools//src/conditions:windows": ['GAME_LIB_PATH=\\".\\game.dll\\"'],
+  })
 )
 
 cc_binary(

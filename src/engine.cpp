@@ -34,19 +34,19 @@ SDL_AppResult engine_init(const int width, const int height, const char *title,
 
   state->game->isValid = false;
 
-  state->game->game_object = SDL_LoadObject("./libgame.dylib");
+  state->game->game_object = SDL_LoadObject(state->game->path);
   if (state->game->game_object == nullptr) {
     SDL_Log("Failed to load game code: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
-  
+
   state->game->game_init =
       GameInit(SDL_LoadFunction(state->game->game_object, "game_init"));
   if (state->game->game_init == nullptr) {
     SDL_Log("Failed to load game_init: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
-  
+
   state->game->game_update =
       GameUpdate(SDL_LoadFunction(state->game->game_object, "game_update"));
   if (state->game->game_update == nullptr) {
@@ -89,19 +89,19 @@ SDL_AppResult engine_rebuild_reload_game(struct AppState *state) {
     return SDL_APP_FAILURE;
   }
 
-  state->game->game_object = SDL_LoadObject("./libgame.dylib");
+  state->game->game_object = SDL_LoadObject(state->game->path);
   if (state->game->game_object == nullptr) {
     SDL_Log("Failed to load game code: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
-  
+
   state->game->game_init =
       GameInit(SDL_LoadFunction(state->game->game_object, "game_init"));
   if (state->game->game_init == nullptr) {
     SDL_Log("Failed to load game_init: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
-  
+
   state->game->game_update =
       GameUpdate(SDL_LoadFunction(state->game->game_object, "game_update"));
   if (state->game->game_update == nullptr) {
