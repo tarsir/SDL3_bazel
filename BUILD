@@ -1,8 +1,7 @@
 load("@emsdk//emscripten_toolchain:wasm_rules.bzl", "wasm_cc_binary")
 
 cc_library(
-  name = "game",
-  srcs = glob(["src/game.*"]),
+  name = "game_headers",
   hdrs = [
     "src/game.h"
   ],
@@ -12,13 +11,27 @@ cc_library(
 )
 
 cc_binary(
+  name = "game",
+  srcs = glob(["src/game.*"]),
+  deps = [
+    ":game_headers",
+  ],
+  linkshared = True,
+)
+
+cc_binary(
   name = "engine",
   data = [":game"],
   srcs = glob(["src/engine.*", "src/main.cpp"]),
   deps = [
     "@com_github_sdl//:sdl3_shared",
-    ":game",
-  ]
+    ":game_headers",
+  ],
+  defines = select({
+    "@bazel_tools//src/conditions:darwin": ['GAME_LIB_PATH=\\"./libgame.dylib\\"'],
+    "@bazel_tools//src/conditions:linux": ['GAME_LIB_PATH=\\"./libgame.so\\"'],
+    "@bazel_tools//src/conditions:windows": ['GAME_LIB_PATH=\\".\\game.dll\\"'],
+  })
 )
 
 cc_binary(

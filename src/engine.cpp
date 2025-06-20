@@ -32,21 +32,29 @@ SDL_AppResult engine_init(const int width, const int height, const char *title,
     return SDL_APP_FAILURE;
   }
 
-  game_init(&state->gameState);
-
   state->game->isValid = false;
 
-  state->game->game_object = SDL_LoadObject("./libgame.so");
+  state->game->game_object = SDL_LoadObject(state->game->path);
   if (state->game->game_object == nullptr) {
     SDL_Log("Failed to load game code: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
+
+  state->game->game_init =
+      GameInit(SDL_LoadFunction(state->game->game_object, "game_init"));
+  if (state->game->game_init == nullptr) {
+    SDL_Log("Failed to load game_init: %s", SDL_GetError());
+    return SDL_APP_FAILURE;
+  }
+
   state->game->game_update =
       GameUpdate(SDL_LoadFunction(state->game->game_object, "game_update"));
   if (state->game->game_update == nullptr) {
     SDL_Log("Failed to load game_update: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
+
+  state->game->game_init(&state->gameState);
 
   state->game->isValid = true;
 
@@ -81,11 +89,19 @@ SDL_AppResult engine_rebuild_reload_game(struct AppState *state) {
     return SDL_APP_FAILURE;
   }
 
-  state->game->game_object = SDL_LoadObject("./libgame.so");
+  state->game->game_object = SDL_LoadObject(state->game->path);
   if (state->game->game_object == nullptr) {
     SDL_Log("Failed to load game code: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
+
+  state->game->game_init =
+      GameInit(SDL_LoadFunction(state->game->game_object, "game_init"));
+  if (state->game->game_init == nullptr) {
+    SDL_Log("Failed to load game_init: %s", SDL_GetError());
+    return SDL_APP_FAILURE;
+  }
+
   state->game->game_update =
       GameUpdate(SDL_LoadFunction(state->game->game_object, "game_update"));
   if (state->game->game_update == nullptr) {
@@ -101,6 +117,7 @@ SDL_AppResult engine_rebuild_reload_game(struct AppState *state) {
 void engine_free_code_instance(struct Game *game) {
   SDL_Log("Free and reset game code - start");
   SDL_UnloadObject(game->game_object);
+  game->game_init = nullptr;
   game->game_update = nullptr;
   game->game_object = nullptr;
   game->isValid = false;
@@ -116,7 +133,7 @@ SDL_AppResult engine_update(struct AppState *appState) {
 
   if (game->isValid) {
     // SDL_Log("Game update - start");
-    game->game_update(r_context->renderer, &(appState->gameState));
+    game->game_update(r_context->renderer, appState->gameState);
     // SDL_Log("Game update - finish");
   }
 

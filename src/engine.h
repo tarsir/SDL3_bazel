@@ -5,7 +5,8 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_init.h>
 
-typedef void (*GameUpdate)(SDL_Renderer *renderer, GameState **gameState);
+typedef void (*GameUpdate)(SDL_Renderer *renderer, GameState *gameState);
+typedef void (*GameInit)(GameState **gameState);
 
 struct RenderContext {
   SDL_Window *window;
@@ -17,6 +18,7 @@ struct Game {
   const char *path;
   SDL_SharedObject *game_object;
   GameUpdate game_update;
+  GameInit game_init;
 };
 
 struct AppState {
