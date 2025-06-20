@@ -22,6 +22,8 @@ jobs:
         disk-cache: ${{ github.workflow }}
         # Share repository cache between workflows.
         repository-cache: true
+    - name: Check out repository code
+      uses: actions/checkout@v4
     - name: Run 
       run: |
         bazel build //:engine
