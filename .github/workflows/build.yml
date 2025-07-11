@@ -27,6 +27,6 @@ jobs:
       uses: actions/checkout@v4
     - name: Run 
       run: |
-        bazel build --copt="-DSDL_UNIX_CONSOLE_BUILD=ON" //:sdl3_shared
+        bazel build --copt="-DSDL_UNIX_CONSOLE_BUILD=ON" //third_party:sdl3_shared
         bazel build --copt="-DSDL_UNIX_CONSOLE_BUILD=ON" //:engine
         bazel build --copt="-DSDL_UNIX_CONSOLE_BUILD=ON" //:release
