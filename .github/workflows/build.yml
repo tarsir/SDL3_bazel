@@ -1,0 +1,32 @@
+name: Build Check
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  build_engine_and_release:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, macos-13, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Setup bazel
+      uses: bazel-contrib/setup-bazel@0.15.0
+      with:
+        # Avoid downloading Bazel every time.
+        bazelisk-cache: true
+        # Store build cache per workflow.
+        disk-cache: ${{ github.workflow }}
+        # Share repository cache between workflows.
+        repository-cache: true
+    - name: Check out repository code
+      uses: actions/checkout@v4
+    - name: Run 
+      run: |
+        bazel build --copt="-DSDL_UNIX_CONSOLE_BUILD=ON" //third_party:sdl3_shared
+        bazel build --copt="-DSDL_UNIX_CONSOLE_BUILD=ON" //:engine
+        bazel build --copt="-DSDL_UNIX_CONSOLE_BUILD=ON" //:release
