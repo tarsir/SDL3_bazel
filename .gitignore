@@ -2,3 +2,6 @@ bazel-bin
 bazel-out
 bazel-*
 index.html
+
+graph.in 
+graph.png

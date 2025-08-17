@@ -1,3 +1,4 @@
+#include <memory>
 #define SDL_MAIN_USE_CALLBACKS 1
 #include "engine.h"
 #include <SDL3/SDL.h>
@@ -10,14 +11,17 @@
 static SDL_Window *window = NULL;
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
-  struct RenderContext *r_context = new RenderContext{nullptr, nullptr};
+  std::unique_ptr<struct RenderContext> r_context =
+      std::make_unique<RenderContext>();
 
-  struct Game *game = new Game{false, GAME_LIB_PATH, nullptr, nullptr, nullptr};
+  std::unique_ptr<struct Game> game = std::make_unique<Game>();
+  game->isValid = false;
+  game->path = GAME_LIB_PATH;
 
   *appstate = new AppState;
   AppState &state = *static_cast<AppState *>(*appstate);
-  state.game = game;
-  state.r_context = r_context;
+  state.game = std::move(game);
+  state.r_context = std::move(r_context);
 
   auto result = engine_init(1920, 1080, "SDL3 Bazel Test", &state);
   if (state.game->game_object == nullptr) {

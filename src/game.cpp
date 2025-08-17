@@ -14,9 +14,11 @@ void game_update(SDL_Renderer *renderer, GameState *state) {
   draw_button(renderer, vec2_f{x, y}, vec2{100, 200});
 }
 
-void game_init(GameState **state) {
+GameState *game_init() {
   SDL_Log("Game init - start");
-  *state = new GameState;
-  (*state)->red = 128;
+  auto state = new GameState();
+  state->red = 128;
+  state->sceneManager = SceneManager();
   SDL_Log("Game init - finish");
+  return state;
 }

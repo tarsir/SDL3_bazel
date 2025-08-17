@@ -4,9 +4,10 @@
 #include "game.h"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_init.h>
+#include <memory>
 
 typedef void (*GameUpdate)(SDL_Renderer *renderer, GameState *gameState);
-typedef void (*GameInit)(GameState **gameState);
+typedef GameState *(*GameInit)();
 
 struct RenderContext {
   SDL_Window *window;
@@ -22,9 +23,9 @@ struct Game {
 };
 
 struct AppState {
-  RenderContext *r_context;
-  Game *game;
-  GameState *gameState;
+  std::unique_ptr<struct RenderContext> r_context;
+  std::unique_ptr<struct Game> game;
+  std::unique_ptr<struct GameState> gameState;
 };
 
 SDL_AppResult engine_init(int width, int height, const char *title,

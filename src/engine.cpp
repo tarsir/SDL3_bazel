@@ -1,5 +1,4 @@
 #include "engine.h"
-#include "game.h"
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_render.h>
@@ -23,10 +22,11 @@ SDL_AppResult engine_init(const int width, const int height, const char *title,
     return SDL_APP_FAILURE;
   }
 
-  struct RenderContext *r_context = state->r_context;
+  const struct RenderContext *r_context = state->r_context.get();
 
-  if (!SDL_CreateWindowAndRenderer(title, width, height, 0, &r_context->window,
-                                   &r_context->renderer)) {
+  if (!SDL_CreateWindowAndRenderer(title, width, height, 0,
+                                   &state->r_context.get()->window,
+                                   &state->r_context.get()->renderer)) {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
                  "Couldn't create window/renderer: %s", SDL_GetError());
     return SDL_APP_FAILURE;
@@ -54,7 +54,7 @@ SDL_AppResult engine_init(const int width, const int height, const char *title,
     return SDL_APP_FAILURE;
   }
 
-  state->game->game_init(&state->gameState);
+  state->gameState.reset(state->game->game_init());
 
   state->game->isValid = true;
 
@@ -82,7 +82,7 @@ SDL_AppResult engine_rebuild_reload_game(struct AppState *state) {
   state->game->isValid = false;
 
   if (state->game->game_object != nullptr) {
-    engine_free_code_instance(state->game);
+    engine_free_code_instance(state->game.get());
   }
 
   if (engine_build_game(state) != 0) {
@@ -126,14 +126,14 @@ void engine_free_code_instance(struct Game *game) {
 
 SDL_AppResult engine_update(struct AppState *appState) {
   // SDL_Log("Engine update - start");
-  const struct RenderContext *r_context = appState->r_context;
-  struct Game *game = appState->game;
+  const RenderContext *r_context = appState->r_context.get();
+  struct Game *game = appState->game.get();
   SDL_SetRenderDrawColor(r_context->renderer, 0, 0, 0, 255);
   SDL_RenderClear(r_context->renderer);
 
   if (game->isValid) {
     // SDL_Log("Game update - start");
-    game->game_update(r_context->renderer, appState->gameState);
+    game->game_update(r_context->renderer, appState->gameState.get());
     // SDL_Log("Game update - finish");
   }
 
@@ -153,13 +153,14 @@ SDL_AppResult engine_update(struct AppState *appState) {
 void debug_pointers(const struct AppState *appState, const char *label) {
   SDL_Log("-- %s START", label);
   SDL_Log("appState pointer: %d", appState);
-  SDL_Log("r_context pointer: %d", appState->r_context);
-  SDL_Log("r_context->renderer pointer: %d", appState->r_context->renderer);
-  SDL_Log("r_context->window pointer: %d", appState->r_context->window);
-  SDL_Log("game pointer: %d", appState->game);
-  SDL_Log("game->isValid pointer: %d", appState->game->isValid);
-  SDL_Log("game_object pointer: %d", appState->game->game_object);
-  SDL_Log("game_update pointer: %d", appState->game->game_update);
-  SDL_Log("game_state pointer: %d", appState->gameState);
+  SDL_Log("r_context pointer: %d", appState->r_context.get());
+  SDL_Log("r_context->renderer pointer: %d",
+          appState->r_context.get()->renderer);
+  SDL_Log("r_context->window pointer: %d", appState->r_context.get()->window);
+  SDL_Log("game pointer: %d", appState->game.get());
+  SDL_Log("game->isValid pointer: %d", appState->game.get()->isValid);
+  SDL_Log("game_object pointer: %d", appState->game.get()->game_object);
+  SDL_Log("game_update pointer: %d", appState->game.get()->game_update);
+  SDL_Log("game_state pointer: %d", appState->gameState.get());
   SDL_Log("-- %s END", label);
 }

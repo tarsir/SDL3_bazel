@@ -1,3 +1,5 @@
+#ifndef TYPES_H
+#define TYPES_H
 #include <cstdint>
 
 struct vec2 {
@@ -12,3 +14,5 @@ struct vec2_f {
 
 typedef struct vec2 vec2;
 typedef struct vec2_f vec2_f;
+
+#endif
