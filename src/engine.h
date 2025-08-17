@@ -7,6 +7,8 @@
 #include <memory>
 
 typedef void (*GameUpdate)(SDL_Renderer *renderer, GameState *gameState);
+typedef SDL_AppResult (*GameHandleEvent)(SDL_Event *event,
+                                         GameState *gameState);
 typedef GameState *(*GameInit)();
 
 struct RenderContext {
@@ -19,6 +21,7 @@ struct Game {
   const char *path;
   SDL_SharedObject *game_object;
   GameUpdate game_update;
+  GameHandleEvent game_handle_event;
   GameInit game_init;
 };
 

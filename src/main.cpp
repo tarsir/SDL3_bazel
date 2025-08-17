@@ -35,20 +35,20 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
 
 SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
   AppState &state = *static_cast<AppState *>(appstate);
-  switch (event->type) {
-  case SDL_EVENT_QUIT:
-    return SDL_APP_SUCCESS;
-  case SDL_EVENT_KEY_DOWN:
-    switch (event->key.key) {
-    case SDLK_W:
-      if (engine_rebuild_reload_game(&state) != SDL_APP_CONTINUE) {
-        SDL_Log("Game reload triggered by keypress failed: %s", SDL_GetError());
-        return SDL_APP_FAILURE;
-      }
-      break;
+  if (event->type == SDL_EVENT_KEY_DOWN && event->key.key == SDLK_F5) {
+    if (engine_rebuild_reload_game(&state) != SDL_APP_CONTINUE) {
+      SDL_Log("Game reload triggered by keypress failed: %s", SDL_GetError());
+      return SDL_APP_FAILURE;
     }
   }
-  return SDL_APP_CONTINUE;
+  if (state.game->game_object == nullptr ||
+      state.game->game_handle_event == nullptr) {
+    debug_pointers(&state, "SDL_AppEvent");
+    return SDL_APP_FAILURE;
+  }
+  if (state.game->game_handle_event != nullptr) {
+    return state.game->game_handle_event(event, state.gameState.get());
+  }
 }
 
 SDL_AppResult SDL_AppIterate(void *appstate) {
@@ -60,4 +60,6 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
   return engine_update(&state);
 }
 
-void SDL_AppQuit(void *appstate, SDL_AppResult result) {}
+void SDL_AppQuit(void *appstate, SDL_AppResult result) {
+  delete static_cast<AppState *>(appstate);
+}

@@ -54,6 +54,13 @@ SDL_AppResult engine_init(const int width, const int height, const char *title,
     return SDL_APP_FAILURE;
   }
 
+  state->game->game_handle_event = GameHandleEvent(
+      SDL_LoadFunction(state->game->game_object, "game_handle_event"));
+  if (state->game->game_handle_event == nullptr) {
+    SDL_Log("Failed to load game_handle_event: %s", SDL_GetError());
+    return SDL_APP_FAILURE;
+  }
+
   state->gameState.reset(state->game->game_init());
 
   state->game->isValid = true;
@@ -106,6 +113,13 @@ SDL_AppResult engine_rebuild_reload_game(struct AppState *state) {
       GameUpdate(SDL_LoadFunction(state->game->game_object, "game_update"));
   if (state->game->game_update == nullptr) {
     SDL_Log("Failed to load game_update: %s", SDL_GetError());
+    return SDL_APP_FAILURE;
+  }
+
+  state->game->game_handle_event = GameHandleEvent(
+      SDL_LoadFunction(state->game->game_object, "game_handle_event"));
+  if (state->game->game_handle_event == nullptr) {
+    SDL_Log("Failed to load game_handle_event: %s", SDL_GetError());
     return SDL_APP_FAILURE;
   }
 
