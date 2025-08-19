@@ -6,6 +6,7 @@ cc_library(
   strip_include_prefix = "src",
   deps = [
     "@com_github_sdl//:sdl3_shared",
+    "@com_github_sdl_ttf//:sdl3_ttf_shared",
   ]
 )
 
@@ -24,6 +25,7 @@ cc_binary(
   srcs = glob(["src/engine.*", "src/main.cpp", "src/**/*.cpp"], exclude=["src/release_main.cpp"]),
   deps = [
     "@com_github_sdl//:sdl3_shared",
+    "@com_github_sdl_ttf//:sdl3_ttf_shared",
     ":game_headers",
   ],
   defines = select({
@@ -37,16 +39,18 @@ cc_binary(
   name = "release",
   srcs = glob(["src/**"], exclude=["src/main.cpp"]),
   deps = [
-    "@com_github_sdl//:sdl3_shared"
+    "@com_github_sdl//:sdl3_shared",
+    "@com_github_sdl_ttf//:sdl3_ttf_shared",
   ]
 )
 
 cc_binary(
-    name = "release-static-linked",
-    srcs = glob(["src/**"], exclude=["src/main.cpp"]),
-    deps = [
-        "@com_github_sdl//:sdl3_static",
-    ]
+  name = "release-static-linked",
+  srcs = glob(["src/**"], exclude=["src/main.cpp"]),
+  deps = [
+    "@com_github_sdl//:sdl3_static",
+    "@com_github_sdl_ttf//:sdl3_ttf_static",
+  ]
 )
 
 wasm_cc_binary(

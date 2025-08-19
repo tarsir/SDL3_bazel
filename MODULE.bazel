@@ -8,9 +8,19 @@ http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "ht
 
 http_archive(
     name = "com_github_sdl",
-    build_file = "@//third_party:BUILD",
-    strip_prefix = "SDL3-3.2.0",
-    url = "https://github.com/libsdl-org/SDL/releases/download/release-3.2.0/SDL3-3.2.0.tar.gz",
+    build_file = "@//third_party/sdl:BUILD",
+    strip_prefix = "SDL3-3.2.20",
+    url = "https://github.com/libsdl-org/SDL/releases/download/release-3.2.20/SDL3-3.2.20.tar.gz",
+)
+
+http_archive(
+    name = "com_github_sdl_ttf",
+    build_file = "@//third_party/sdl_ttf:BUILD",
+    strip_prefix = "SDL3_ttf-3.2.2",
+    patch_cmds = [
+      "bash external/download.sh"
+    ],
+    url = "https://github.com/libsdl-org/SDL_ttf/releases/download/release-3.2.2/SDL3_ttf-3.2.2.tar.gz",
 )
 
 bazel_dep(
@@ -27,4 +37,11 @@ git_override(
     remote = "https://github.com/emscripten-core/emsdk.git",
     strip_prefix = "bazel",
     tag = emsdk_version,
+)
+
+bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+git_override(
+    module_name = "hedron_compile_commands",
+    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
+    commit = "abb61a688167623088f8768cc9264798df6a9d10",
 )
