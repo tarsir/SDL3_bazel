@@ -2,6 +2,7 @@
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_render.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <csignal>
 #include <cstdio>
 #include <cstdlib>
@@ -19,6 +20,11 @@ SDL_AppResult engine_init(const int width, const int height, const char *title,
   auto ret = SDL_InitSubSystem(flags);
   if (!ret) {
     SDL_Log("SDL Init failed with: %s", SDL_GetError());
+    return SDL_APP_FAILURE;
+  }
+
+  if (!TTF_Init()) {
+    SDL_Log("TTF_Init failed: %s\n", SDL_GetError());
     return SDL_APP_FAILURE;
   }
 
@@ -172,9 +178,11 @@ void debug_pointers(const struct AppState *appState, const char *label) {
           appState->r_context.get()->renderer);
   SDL_Log("r_context->window pointer: %d", appState->r_context.get()->window);
   SDL_Log("game pointer: %d", appState->game.get());
-  SDL_Log("game->isValid pointer: %d", appState->game.get()->isValid);
+  SDL_Log("game->isValid: %d", appState->game.get()->isValid);
   SDL_Log("game_object pointer: %d", appState->game.get()->game_object);
   SDL_Log("game_update pointer: %d", appState->game.get()->game_update);
   SDL_Log("game_state pointer: %d", appState->gameState.get());
+  SDL_Log("game_state->sceneManager pointer: %d",
+          &appState->gameState.get()->sceneManager);
   SDL_Log("-- %s END", label);
 }

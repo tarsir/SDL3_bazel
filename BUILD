@@ -21,7 +21,7 @@ cc_binary(
 
 cc_binary(
   name = "engine",
-  data = [":game"],
+  data = [":game"] + glob(["assets/*"]),
   srcs = glob(["src/engine.*", "src/main.cpp", "src/**/*.cpp"], exclude=["src/release_main.cpp"]),
   deps = [
     "@com_github_sdl//:sdl3_shared",

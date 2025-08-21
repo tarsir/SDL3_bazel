@@ -1,8 +1,8 @@
-#include <memory>
 #define SDL_MAIN_USE_CALLBACKS 1
 #include "engine.h"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <memory>
 
 #ifndef GAME_LIB_PATH
 #define GAME_LIB_PATH ""
