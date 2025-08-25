@@ -1,14 +1,16 @@
 #include "game.h"
-#include "ui/ui.h"
-#include <memory>
+#include "src/ui/text_manager.h"
 
 void game_update(SDL_Renderer *renderer, GameState *state) {
-  state->sceneManager.Draw(renderer);
+  state->sceneManager.Draw(renderer, &state->textManager);
 }
 
 GameState *game_init() {
   GameState *state = new GameState();
   state->sceneManager = SceneManager();
+  state->textManager = TextManager();
+  state->textManager.AddFont("assets/LTSuperiorSerif-Regular.otf", "default",
+                             18);
   return state;
 }
 
